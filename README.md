@@ -1,2 +1,11 @@
 # go-crypto
-Minimalistic package with a friendly interface for using common crypto functions in Go
+
+Package go-crypto provides an opinionated, simple interface to use common crypto functions in golang
+
+## Features
+
+- Extremely simple to use.
+
+## Usage
+
+TODO
