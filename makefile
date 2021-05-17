@@ -7,6 +7,7 @@ GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 GOVENDOR=$(GOCMD) mod vendor
 MAIN_FILE=main.go
+BINARY_NAME=go_crypto
 
 all: test build
 build: deps
