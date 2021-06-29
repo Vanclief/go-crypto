@@ -46,6 +46,7 @@ func (kp *KeyPair) Sign(message []byte) ([]byte, error) {
 	}
 
 	sig := ed25519.Sign(kp.PrivateKey, message)
+
 	return sig, nil
 }
 

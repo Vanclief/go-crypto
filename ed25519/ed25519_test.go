@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/vanclief/go-crypto/utils"
 )
 
 func TestNewKeyPair(t *testing.T) {
@@ -19,12 +20,28 @@ func TestNewKeyPair(t *testing.T) {
 
 func TestSign(t *testing.T) {
 	// Setup
-	keyPair, err := NewKeyPair()
+	privateKey, err := utils.Base64ToBytes("tiQWG+E3kCBcw4HCpyTxb21wmdyCYoN64VaQoOnL4Mdi03bXYLxSr3zThv3GFhbnr+e+YkmI1SGHihslpgKSrA==")
+	assert.Nil(t, err)
+
+	keyPair, err := LoadKeyPair(nil, privateKey)
+	assert.Nil(t, err)
 
 	// Case 1: Should work
 	sig, err := keyPair.Sign([]byte("test"))
 	assert.Nil(t, err)
 	assert.NotNil(t, sig)
+
+	expectedSig, err := utils.Base64ToBytes("jpYb6ncYHNj6KhBeIp6iD0m2aq8vT01LZk2JuBRbN6I31/3s/XyEpqYtKqVrRituCTMpkPBSSEN01zBK7R6WAw==")
+	assert.Nil(t, err)
+	assert.Equal(t, expectedSig, sig)
+
+	// Case 2: Should give same result as tweetnacl.js.org/#/sign
+	sig, err = keyPair.Sign([]byte("+eLqqkLZ/p5VipuO8b82bxkKrKqDutJkHuEG6QQQluQ="))
+	assert.Nil(t, err)
+
+	expectedSig, err = utils.Base64ToBytes("8q7JOVz5IydFlu/yQnxVqbBTu1abDBmhATPMB92lBnL9wRQQy2uBgemkFhU399z9QydDuRtg/mtGcnomRSUsDw==")
+	assert.Nil(t, err)
+	assert.Equal(t, expectedSig, sig)
 }
 
 func TestVerifySignature(t *testing.T) {
@@ -51,6 +68,7 @@ func TestVerifySignature(t *testing.T) {
 func TestGenerateTimeSignature(t *testing.T) {
 	// Setup
 	keyPair, err := NewKeyPair()
+	assert.Nil(t, err)
 
 	// Case 1: Should work
 	sig, err := keyPair.GenerateTimeSignature(30)
@@ -81,7 +99,7 @@ func TestVerifyTimeSignature(t *testing.T) {
 	priv, _ := base64.StdEncoding.DecodeString(privateString)
 
 	deterministicKeyPair, _ := LoadKeyPair(pub, priv)
-	sig, _ = deterministicKeyPair.GenerateTimeSignature(30)
+	// sig, _ = deterministicKeyPair.GenerateTimeSignature(30)
 	sig = []byte{217, 81, 61, 195, 137, 7, 117, 170, 218, 177, 186, 215, 87, 87, 121, 33, 28, 255, 24, 97, 91, 41, 188, 234, 230, 171, 151, 57, 79, 44, 202, 2, 101, 105, 241, 165, 31, 244, 181, 166, 17, 129, 76, 50, 13, 166, 183, 25, 231, 119, 226, 90, 36, 135, 1, 229, 25, 54, 215, 125, 167, 38, 163, 2}
 
 	v = deterministicKeyPair.VerifyTimeSignature(sig, 30)
