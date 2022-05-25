@@ -1,9 +1,11 @@
 package utils
 
 import (
+	"crypto/rand"
 	"encoding/base64"
 	"encoding/hex"
 	"errors"
+	"math/big"
 	"strings"
 )
 
@@ -31,4 +33,31 @@ func BytesToBase64(b []byte) string {
 func Base64ToBytes(s string) ([]byte, error) {
 	s = strings.TrimRight(s, "=")
 	return base64.RawStdEncoding.DecodeString(s)
+}
+
+// GenerateRandomBytes returns a set of securely generated random bytes
+func GenerateRandomBytes(size int) ([]byte, error) {
+	b := make([]byte, size)
+	_, err := rand.Read(b)
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}
+
+// GenerateRandomString returns a securely generated random string
+func GenerateRandomString(size int) (string, error) {
+	const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-"
+
+	str := make([]byte, size)
+	for i := 0; i < size; i++ {
+		num, err := rand.Int(rand.Reader, big.NewInt(int64(len(characters))))
+		if err != nil {
+			return "", err
+		}
+		str[i] = characters[num.Int64()]
+	}
+
+	return string(str), nil
 }

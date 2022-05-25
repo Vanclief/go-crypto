@@ -47,3 +47,19 @@ func TestBase64ToBytes(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, "This is a base64", string(b))
 }
+
+func TestGenerateRandomBytes(t *testing.T) {
+	b, err := GenerateRandomBytes(32)
+
+	assert.NotNil(t, b)
+	assert.Nil(t, err)
+	assert.Equal(t, 32, len(b))
+}
+
+func TestGenerateRandomString(t *testing.T) {
+	str, err := GenerateRandomString(32)
+
+	assert.NotNil(t, str)
+	assert.Nil(t, err)
+	assert.Equal(t, 32, len(str))
+}
