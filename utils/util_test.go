@@ -63,3 +63,11 @@ func TestGenerateRandomString(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 32, len(str))
 }
+
+func TestGenerateRandomNumber(t *testing.T) {
+	n, err := GenerateRandomNumber(6)
+
+	assert.NotNil(t, n)
+	assert.Nil(t, err)
+	assert.Equal(t, 6, len(n))
+}

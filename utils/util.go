@@ -48,7 +48,23 @@ func GenerateRandomBytes(size int) ([]byte, error) {
 
 // GenerateRandomString returns a securely generated random string
 func GenerateRandomString(size int) (string, error) {
-	const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-"
+	const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+
+	str := make([]byte, size)
+	for i := 0; i < size; i++ {
+		num, err := rand.Int(rand.Reader, big.NewInt(int64(len(characters))))
+		if err != nil {
+			return "", err
+		}
+		str[i] = characters[num.Int64()]
+	}
+
+	return string(str), nil
+}
+
+// GenerateRandomNumber returns a securely generated random string of numbers
+func GenerateRandomNumber(size int) (string, error) {
+	const characters = "0123456789"
 
 	str := make([]byte, size)
 	for i := 0; i < size; i++ {
